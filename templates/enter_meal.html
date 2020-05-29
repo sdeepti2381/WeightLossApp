@@ -2,7 +2,7 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title> RonaFit </title>
+<title> Quarantine Fitness </title>
 {% endblock %}
 
 {% block body %}
@@ -39,12 +39,9 @@
         {% endfor %}
     </table>
     {% endif %}
-    
-    <form action="/signin" method="POST">
-        <button type="submit" value="Sign in">Sign In </button>
-    </form>
-    <form action="/showSignUp" method="post">
-        <button type="submit" value="Sign Up">Sign Up </button>
+    <form action = "/" method="POST">
+        <input type = "text" name="content" id="content">
+        <input type ="submit" value="Add Food Item">   
     </form>
 </div>
 {% endblock %} 

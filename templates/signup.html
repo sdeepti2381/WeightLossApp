@@ -1,0 +1,43 @@
+<!--This is the homepage which will allow the user to signup -->
+{% extends 'base.html' %}
+
+{% block head %}
+<title> Sign up! </title>
+{% endblock %}
+
+{% block body %}
+
+<div class = "signUp">
+    <h4 style="text-align:center">It's easy to sign up! After signing up, 
+    you have taken the first step to beginning a better life.</h4>
+    
+
+    <form action="/signup" method="POST">
+  
+        <div class="form-group">
+          <label>Username</label>
+          <input class="form-control" type="text" name="username" id="user">
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <input class="form-control" type="password" name="password" id="pass">
+        </div>
+
+        <div class="form-group">
+            <label>Name</label>
+            <input class="form-control" type="text" name="name" id="name">
+          </div>
+  
+          <div class="form-group">
+            <label>Email</label>
+            <input class="form-control" type="text" name="email" id="email">
+          </div>
+
+          <form action="/signup" method="post">
+            <button type="submit" value="Sign Up">Sign Up </button>
+        </form>
+
+      </form>
+</div>
+{% endblock %}
