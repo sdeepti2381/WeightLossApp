@@ -54,7 +54,7 @@ def signup():
 
         except:
             return ("There was an issue adding this user plus YOU SUCK ")
-
+    return ("SUCCESS")
   
 @app.route('/dashboard')
 def dashboard():
