@@ -43,7 +43,7 @@ def signup():
         name = request.form['name']
         email = request.form['email']
         print("cheesecake")
-        print(username)
+        print(name)
         #creating a database for new user
         new_user = Todo(username=username, password=password, name=name, email=email)
 
@@ -54,7 +54,7 @@ def signup():
 
         except:
             return ("There was an issue adding this user plus YOU SUCK ")
-    return ("SUCCESS")
+    return render_template("signin.html")
   
 @app.route('/dashboard')
 def dashboard():
