@@ -1,13 +1,15 @@
-from flask import Flask, render_template, url_for, request, redirect
+from flask import Flask, render_template, url_for, request, redirect, session
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
-
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user.db'
+engine = create_engine('sqlite:///user.db', echo=True)
 db = SQLAlchemy(app)
 
-class Todo(db.Model):
+class users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(200),nullable=False)
     password = db.Column(db.String(200), nullable=False)
@@ -16,19 +18,37 @@ class Todo(db.Model):
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     
     def __repr__(self):
-        return '<Task %r>' % self.id
+        return '<User %r>' % self.username
 
 @app.route('/')
 def home():
     return render_template("index.html")
 
-#this is our sign in page!
-@app.route('/signin', methods=['POST', 'GET'])
-def signin():
-    username = request.get['user']
-    password = request.get['pass']
-
+@app.route('/showSignIn')
+def showSignIn():
     return render_template("signin.html")
+
+
+#this is our sign in page!
+@app.route('/signin', methods = ["GET","POST"])
+def signin():  
+
+    if request.method == "POST":
+
+        username = str(request.form.get('username'))
+        password = str(request.form.get('password'))
+        print("test") 
+        print(username)
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        query = session.query(users).filter(users.username.in_([username]), users.password.in_([password]) )
+        result = query.first()
+        if result:
+            result_name = result.name
+            return render_template("dashboard.html", name=result_name)
+        else:
+            return "Object not found " + username + " " + password
+
 
 @app.route('/showSignUp')
 def showSignUp():
@@ -38,34 +58,36 @@ def showSignUp():
 @app.route('/signup', methods=['POST', 'GET'])
 def signup():
     if request.method == 'POST':    
-        username = request.form['user']
-        password = request.form['pass']
-        name = request.form['name']
-        email = request.form['email']
-        print("cheesecake")
-        print(name)
-        #creating a database for new user
-        new_user = Todo(username=username, password=password, name=name, email=email)
+        username = request.form.get('username')
+        password = request.form.get('password')
+        name = request.form.get('name')
+        email = request.form.get('email')
 
+        #creating a database for new user
+        new_user = users(username=username, password=password, name=name, email=email)
+        print(username)
+        print(name)
+        print(password)
+        print(email)
         try:
             db.session.add(new_user)
             db.session.commit()
-            return redirect(url_for('signin'))
+            return redirect(url_for('showSignIn'))
 
         except:
-            return ("There was an issue adding this user plus YOU SUCK ")
+            return ("There was an issue adding this user")
     return render_template("signin.html")
   
 @app.route('/dashboard')
 def dashboard():
-    return ""
+    return render_template("dashboard.html")
 
 @app.route('/enter_meal', methods=['POST','GET'])
 def enter_meal():
 
     if request.method == 'POST':
         task_content = request.form['content']
-        new_task = Todo(content=task_content)
+        new_task = todo(content=task_content)
 
         try:
             db.session.add(new_task)
